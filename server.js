@@ -5,19 +5,19 @@
 /* ***********************
  * Require Statements
  *************************/
-const express = require("express")
-const expresslayout = require("express-ejs-layouts")
-const env = require("dotenv").config()
-const app = express()
-const static = require("./routes/static")
+const express = require('express');
+const expressLayouts = require('express-ejs-layouts');
+const app = express();
+const path = require('path');
 
 
 /* ***********************
  * View Engine and Templates
  *************************/
-app.set("view engine", "ejs")
-app.use(expressLayouts)
-app.set("layout", "./layouts/layout") // not at views root
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(expressLayouts);
+app.use(express.static(path.join(__dirname, 'public'))); // not at views root
 
 /* ***********************
  * Routes
