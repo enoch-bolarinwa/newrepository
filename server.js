@@ -20,7 +20,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Index route
 app.get('/', function (req, res) {
-  res.render('index', { title: 'Home' });
+  res.render('index', { title: 'Home' }); res.send('<h1>Testing Express is working</h1>');
+
 });
 
 // Start the server
