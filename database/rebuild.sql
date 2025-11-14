@@ -53,6 +53,7 @@ INSERT INTO inventory (
     inv_year,
     classification_id
 )
+
 VALUES
 ('GM', 'Hummer', 'Huge interior with small interiors and powerful performance.', '/images/gm-hummer.jpg', '/images/gm-hummer-tn.jpg', 50000, 25000, 2018, 1),
 ('Jeep', 'Wrangler', 'Off-road capability with removable doors.', '/images/jeep-wrangler.jpg', '/images/jeep-wrangler-tn.jpg', 38000, 15000, 2019, 1),
@@ -68,6 +69,7 @@ VALUES
 
 ('Dodge', 'Challenger', 'Customized muscle car.', '/images/dodge-challenger.jpg', '/images/dodge-challenger-tn.jpg', 60000, 12000, 2020, 5),
 ('Ford', 'Mustang', 'Iconic muscle car with custom trim.', '/images/ford-mustang.jpg', '/images/ford-mustang-tn.jpg', 58000, 9000, 2021, 5);
+
 UPDATE inventory
 SET inv_description = REPLACE(inv_description, 'small interiors', 'a huge interior')
 WHERE inv_make = 'GM' AND inv_model = 'Hummer';
