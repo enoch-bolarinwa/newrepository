@@ -77,5 +77,23 @@ WHERE c.classification_name = 'Sport';
 UPDATE public.inventory
 SET inv_image = REPLACE(inv_image, '/images/', '/images/vehicles/'),
     inv_thumbnail = REPLACE(inv_thumbnail, '/images/', '/images/vehicles/');
+INSERT INTO account (
+  account_firstname,
+  account_lastname,
+  account_email,
+  account_password
+)
+VALUES (
+  'Tony',
+  'Stark',
+  'tony@starkindustries.com',
+  'IamIronman123'
+);
+UPDATE account
+SET account_type = 'Admin'
+WHERE account_email = 'tony@starkindustries.com';
+
+DELETE FROM account
+WHERE account_email = 'tony@starkindustries.com';
 
 
