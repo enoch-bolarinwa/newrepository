@@ -77,3 +77,17 @@ footer {
   font-size: 0.9rem;
 }
 
+.vehicle-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .vehicle-detail {
+    flex-direction: row;
+  }
+}
+
+
+
