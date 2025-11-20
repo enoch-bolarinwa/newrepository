@@ -1,4 +1,17 @@
-// utilities/index.js
+// TEMPORARY navigation builder for testing
+async function getNav() {
+  // Later you will replace this with a DB query
+  return `
+    <nav>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/inventory">Inventory</a></li>
+        <li><a href="/account/login">Login</a></li>
+      </ul>
+    </nav>
+  `
+}
+
 function formatVehicleHTML(vehicle) {
   const price = vehicle.price.toLocaleString("en-US", {
     style: "currency",
@@ -23,4 +36,4 @@ function formatVehicleHTML(vehicle) {
   `
 }
 
-module.exports = { formatVehicleHTML }
+module.exports = { getNav, formatVehicleHTML }
