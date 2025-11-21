@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Error <%= status %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/css/detail.css" />
+  <style>
+    main { max-width: 900px; margin: 40px auto; padding: 20px; }
+    .error-box { border:1px solid #e0e0e0; padding:20px; border-radius:6px; background:#fff; }
+    .error-code { font-size: 2rem; color:#c0392b; }
+  </style>
+</head>
+<body>
+  <%- include('partials/header') %>
+  <main>
+    <div class="error-box" role="alert" aria-live="assertive">
+      <div class="error-code">Error <%= status %></div>
+      <h1><%= message %></h1>
+      <p>If you reached this page from a link on the site, please <a href="/contact">contact us</a> so we can fix the problem.</p>
+
+      <% if (stack) { %>
+        <details>
+          <summary>Technical details</summary>
+          <pre><%= stack %></pre>
+        </details>
+      <% } %>
+    </div>
+  </main>
+  <%- include('partials/footer') %>
+</body>
+</html>

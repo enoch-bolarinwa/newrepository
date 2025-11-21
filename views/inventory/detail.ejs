@@ -1,13 +1,60 @@
-<!DOCTYPE html>
+<!-- views/inventory/detail.ejs -->
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title><%= title %></title>
-  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/detail.css" />
 </head>
 <body>
-  <main>
-    <%- vehicleHTML %>
+  <%- include('../partials/header') %>
+
+  <main class="container">
+    <div class="detail-grid">
+      <!-- Left: full-size image -->
+      <div class="image-column">
+        <!-- Prefer vehicle.fullsize_image_url from DB; fallback to uploaded sample -->
+        <img src="<%= vehicle.fullsize_image_url || '/mnt/data/bf260443-70ed-4880-a78d-5cb283bbb1c3.png' %>"
+             alt="<%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %> full view"
+             class="full-image" />
+      </div>
+
+      <!-- Right: content -->
+      <div class="content-column">
+        <h1 class="title"><%= vehicle.year %> <%= vehicle.make %> <%= vehicle.model %></h1>
+        <p class="price"><%= (typeof vehicle.price === 'number') ? new Intl.NumberFormat('en-US', {style:'currency', currency:'USD'}).format(vehicle.price) : vehicle.price %></p>
+
+        <div class="meta">
+          <p><strong>Mileage:</strong> <%= (vehicle.mileage != null) ? Number(vehicle.mileage).toLocaleString('en-US') + ' miles' : '—' %></p>
+          <p><strong>Exterior Color:</strong> <%= vehicle.exterior_color || 'Unknown' %></p>
+          <p><strong>Interior Color:</strong> <%= vehicle.interior_color || 'Unknown' %></p>
+        </div>
+
+        <section class="additional-info">
+          <h2>Vehicle Details</h2>
+          <ul class="spec-list">
+            <li><strong>Fuel Type:</strong> <%= vehicle.fuel_type || 'Unknown' %></li>
+            <li><strong>Drivetrain:</strong> <%= vehicle.drivetrain || 'Unknown' %></li>
+            <li><strong>Transmission:</strong> <%= vehicle.transmission || 'Unknown' %></li>
+            <li><strong>Stock #:</strong> <%= vehicle.stock || 'N/A' %></li>
+            <li><strong>VIN:</strong> <%= vehicle.vin || 'N/A' %></li>
+          </ul>
+        </section>
+
+        <section class="description">
+          <h2>Description</h2>
+          <p><%= vehicle.description || 'No description available.' %></p>
+        </section>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="/contact">Contact Us</a>
+          <a class="btn" href="/inventory/type/1">Back to Classification</a>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <%- include('../partials/footer') %>
 </body>
 </html>

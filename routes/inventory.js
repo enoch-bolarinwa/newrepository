@@ -1,9 +1,13 @@
 // routes/inventory.js
-const express = require("express")
-const router = express.Router()
-const invController = require("../controllers/invController")
+const express = require('express');
+const router = new express.Router();
+const invController = require('../controllers/invController');
 
-// Single vehicle detail view
-router.get("/detail/:inv_id", invController.buildDetailView)
+// existing classification routes...
+// Route to show a single vehicle detail (expects /inventory/detail/:inv_id)
+router.get('/detail/:inv_id', invController.buildDetailView);
 
-module.exports = router
+// Intentional error route for Task 3
+router.get('/cause-error', invController.triggerError);
+
+module.exports = router;

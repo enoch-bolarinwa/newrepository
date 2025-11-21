@@ -1,0 +1,105 @@
+/* public/css/detail.css */
+:root{
+  --max-width: 1100px;
+  --gap: 24px;
+  --muted: #666;
+  --accent: #2a9d8f;
+}
+
+body{
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  line-height: 1.45;
+  color: #222;
+  margin: 0;
+  padding: 0;
+}
+
+.container{
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.detail-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap);
+}
+
+/* two-column for larger screens */
+@media (min-width: 900px) {
+  .detail-grid{
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.image-column {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: #f9f9f9;
+  padding: 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.full-image{
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  object-fit: contain;
+  display:block;
+  border-radius: 4px;
+}
+
+/* content column */
+.content-column {
+  padding: 6px 12px;
+}
+
+.title {
+  font-size: 1.6rem;
+  margin: 0 0 8px 0;
+}
+
+.price {
+  font-size: 1.5rem;
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.meta p {
+  margin: 6px 0;
+  color: var(--muted);
+}
+
+.spec-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.spec-list li {
+  margin: 6px 0;
+}
+
+.description {
+  margin-top: 12px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  margin-right: 8px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border: none;
+}
