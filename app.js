@@ -3,6 +3,11 @@ const express = require('express');
 const app = express();
 const inventoryRouter = require('./routes/inventory');
 const errorController = require('./controllers/baseController'); // from your activities
+const path = require("path");
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
 
 // ... other middleware and routes
 app.use('/inventory', inventoryRouter);
