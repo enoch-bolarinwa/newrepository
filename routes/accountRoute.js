@@ -1,5 +1,10 @@
-const express = require("express")
-const router = express.Router()
+// Required modules at top
+const express = require("express");
+const router = new express.Router();
+const accountController = require("../controllers/accountController");
+const utilities = require("../utilities/");
+const regValidate = require("../utilities/account-validation");   // <-- Number 1
+
 
 // Example: Account home page
 router.get("/", (req, res) => {
@@ -15,5 +20,23 @@ router.get("/profile", (req, res) => {
 router.get("/settings", (req, res) => {
   res.send("This is the Account Settings Page")
 })
+
+
+// -----------------------------------------
+// ✅ NUMBER 2 GOES RIGHT HERE
+// -----------------------------------------
+
+// Process the registration data
+router.post(
+  "/register",
+  regValidate.registrationRules(),      // validation rules
+  regValidate.checkRegistrationData,    // run validation & handle errors
+  utilities.handleErrors(accountController.registerAccount)
+)
+
+
+// -----------------------------------------
+// End of routes
+// -----------------------------------------
 
 module.exports = router
