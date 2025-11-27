@@ -1,47 +1,110 @@
 // controllers/invController.js
-const inventoryModel = require('../models/inventory-model');
-const utilities = require('../utilities');
 
-// show detail view
-async function buildDetailView(req, res, next) {
-  const inv_id = req.params.inv_id;
+const invModel = require("../models/inventory-model")
+const utilities = require("../utilities")
 
-  try {
-    // get vehicle by id from model
-    const vehicle = await inventoryModel.getVehicleById(inv_id);
-    if (!vehicle) {
-      // 404 - not found
-      const err = new Error('Vehicle not found');
-      err.status = 404;
-      return next(err);
-    }
+/* ============================
+   Build Management View
+=============================== */
+async function buildManagement(req, res) {
+  const nav = await utilities.getNav()
+  res.render("inventory/management", {
+    title: "Inventory Management",
+    nav,
+    messages: req.flash("notice")
+  })
+}
 
-    // get HTML fragment from utility (wraps data in HTML)
-    const vehicleHtml = utilities.buildVehicleDetailHTML(vehicle);
+/* ============================
+   Build Add Classification View
+=============================== */
+async function buildAddClassification(req, res) {
+  const nav = await utilities.getNav()
+  res.render("inventory/add-classification", {
+    title: "Add New Classification",
+    nav,
+    errors: null,
+    messages: req.flash("notice")
+  })
+}
 
-    // render the EJS view, pass both raw data and html fragment
-    res.render('inventory/detail', {
-      title: `${vehicle.make} ${vehicle.model} - ${vehicle.year}`,
-      vehicle,
-      vehicleHtml
-    });
-  } catch (error) {
-    // forward any DB or unexpected errors to error handler
-    next(error);
+/* ============================
+   Process New Classification
+=============================== */
+async function addClassification(req, res) {
+  const { classification_name } = req.body
+
+  const result = await invModel.addClassification(classification_name)
+  const nav = await utilities.getNav()
+
+  if (result) {
+    req.flash("notice", "Classification added successfully.")
+    res.status(201).render("inventory/management", {
+      title: "Inventory Management",
+      nav,
+      messages: req.flash("notice")
+    })
+  } else {
+    req.flash("notice", "Failed to add classification.")
+    res.status(500).render("inventory/add-classification", {
+      title: "Add Classification",
+      nav,
+      errors: null,
+      messages: req.flash("notice")
+    })
   }
 }
 
-// intentional error endpoint — will create a 500
-function triggerError(req, res, next) {
-  try {
-    // create an error intentionally
-    throw new Error('Intentional server error for testing (Task 3).');
-  } catch (err) {
-    next(err); // will be caught by our error middleware
+/* ============================
+   Build Add Inventory View
+=============================== */
+async function buildAddInventory(req, res) {
+  const nav = await utilities.getNav()
+  const classificationList = await utilities.buildClassificationList()
+
+  res.render("inventory/add-inventory", {
+    title: "Add New Inventory Item",
+    nav,
+    classificationList,
+    messages: req.flash("notice"),
+    errors: null,
+    ...req.body
+  })
+}
+
+/* ============================
+   Process New Inventory Item
+=============================== */
+async function addInventory(req, res) {
+  const nav = await utilities.getNav()
+  const classificationList = await utilities.buildClassificationList(req.body.classification_id)
+
+  const result = await invModel.addInventory(req.body)
+
+  if (result) {
+    req.flash("notice", "Vehicle added successfully.")
+    res.status(201).render("inventory/management", {
+      title: "Inventory Management",
+      nav,
+      messages: req.flash("notice")
+    })
+  } else {
+    req.flash("notice", "Failed to add inventory item.")
+    res.status(500).render("inventory/add-inventory", {
+      title: "Add New Inventory Item",
+      nav,
+      classificationList,
+      messages: req.flash("notice"),
+      errors: null,
+      ...req.body
+    })
   }
 }
 
 module.exports = {
-  buildDetailView,
-  triggerError,
-};
+  buildManagement,
+  buildAddClassification,
+  addClassification,
+  buildAddInventory,
+  addInventory
+}

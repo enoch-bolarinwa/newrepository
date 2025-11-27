@@ -1,23 +1,9 @@
-<% /* =========================
-     Content Heading Section
-   ========================= */ %>
+<%- include("../partials/header") %>
 
-<% if (title) { %>
-  <h1><%= title %></h1>
-<% } else {
-  res.redirect('/')
-} %>
+<h1><%= classificationName %></h1>
 
+<div>
+  <%- vehicleGrid %>
+</div>
 
-<% /* =========================
-     Message Section (inactive)
-   ========================= */ %>
-
-<%# messages() %>
-
-
-<% /* =========================
-     Inventory Items Display
-   ========================= */ %>
-
-<%- grid %>
+<%- include("../partials/footer") %>

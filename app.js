@@ -1,35 +1,22 @@
-// app.js (partial)
-const express = require('express');
+const express = require("express");
 const app = express();
-const inventoryRouter = require('./routes/inventory');
-const errorController = require('./controllers/baseController'); // from your activities
-const path = require("path");
+const invRoute = require("./routes/inventoryRoute");
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+// static
+app.use(express.static("public"));
 
+// routes
+app.use("/inv", invRoute);   // important
 
-// ... other middleware and routes
-app.use('/inventory', inventoryRouter);
-
-// 404 handler for unknown routes
+// 404 handler (last)
 app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  next(new Error("Not Found"));
 });
 
-// Error handling middleware (must have 4 args)
+// error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  const status = err.status || 500;
-  res.status(status);
-  // Render a friendly error view (views/error.ejs)
-  res.render('error', {
-    message: err.message || 'Server Error',
-    status,
-    stack: (app.get('env') === 'development') ? err.stack : ''
-  });
+  res.status(err.status || 500);
+  res.render("error", { error: err });
 });
 
 module.exports = app;

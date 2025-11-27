@@ -1,32 +1,64 @@
 // models/inventory-model.js
-const pool = require('../database'); // adjust to your DB connection
 
-/**
- * Returns a single vehicle object or null.
- * Uses parameterized query (prepared statement).
- */
-async function getVehicleById(inv_id) {
-  const sql = `
-    SELECT inv_id, make, model, year, price, mileage, exterior_color, interior_color,
-           fuel_type, drivetrain, transmission, stock, vin, fullsize_image_url, description
-    FROM inventory
-    WHERE inv_id = $1
-    LIMIT 1;
-  `;
+const pool = require("../database/")
 
-  // For mysql2 you'd use ? placeholders; for postgres use $1, $2...
-  const params = [inv_id];
-
+/* ============================
+   Add Classification
+=============================== */
+async function addClassification(name) {
   try {
-    const result = await pool.query(sql, params);
-    // If using mysql2: result[0]
-    if (!result || !result.rows || result.rows.length === 0) return null;
-    return result.rows[0];
-  } catch (err) {
-    throw err;
+    const sql = `
+      INSERT INTO classification (classification_name)
+      VALUES ($1)
+      RETURNING *
+    `
+    const result = await pool.query(sql, [name])
+    return result.rows[0]
+  } catch (error) {
+    return null
+  }
+}
+
+/* ============================
+   Add Inventory Item
+=============================== */
+async function addInventory({
+  inv_make,
+  inv_model,
+  inv_year,
+  inv_description,
+  inv_image,
+  inv_thumbnail,
+  inv_price,
+  inv_miles,
+  inv_color,
+  classification_id
+}) {
+  try {
+    const sql = `
+      INSERT INTO inventory 
+        (inv_make, inv_model, inv_year, inv_description,
+         inv_image, inv_thumbnail, inv_price, inv_miles,
+         inv_color, classification_id)
+      VALUES
+        ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+      RETURNING *
+    `
+
+    const data = [
+      inv_make, inv_model, inv_year, inv_description,
+      inv_image, inv_thumbnail, inv_price, inv_miles,
+      inv_color, classification_id
+    ]
+
+    const result = await pool.query(sql, data)
+    return result.rows[0]
+  } catch (error) {
+    return null
   }
 }
 
 module.exports = {
-  getVehicleById,
-};
+  addClassification,
+  addInventory
+}
