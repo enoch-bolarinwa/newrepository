@@ -1,22 +1,53 @@
-const express = require("express");
-const app = express();
-const invRoute = require("./routes/inventoryRoute");
+// app.js
 
-// static
-app.use(express.static("public"));
+const express = require("express")
+const app = express()
+const path = require("path")
+const session = require("express-session")
+const flash = require("connect-flash")
+const inventoryRoute = require("./routes/inventoryRoute")
 
-// routes
-app.use("/inv", invRoute);   // important
+require("dotenv").config()
 
-// 404 handler (last)
-app.use((req, res, next) => {
-  next(new Error("Not Found"));
-});
+// Middleware
+app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 
-// error handler
+// Views
+app.set("view engine", "ejs")
+app.set("views", path.join(__dirname, "views"))
+
+// Public folder
+app.use(express.static("public"))
+
+// Sessions / Flash
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "secret",
+    resave: false,
+    saveUninitialized: true
+  })
+)
+app.use(flash())
+
+// Routes
+app.use("/inv", inventoryRoute)
+
+// Home route
+app.get("/", (req, res) => {
+  res.redirect("/inv")
+})
+
+// 404
+app.use((req, res) => {
+  res.status(404).send("Page Not Found")
+})
+
+// Error handler
 app.use((err, req, res, next) => {
-  res.status(err.status || 500);
-  res.render("error", { error: err });
-});
+  console.error(err)
+  res.status(500).send("Server Error")
+})
 
-module.exports = app;
+const port = process.env.PORT || 3000
+app.listen(port, () => console.log("Server running on port " + port))

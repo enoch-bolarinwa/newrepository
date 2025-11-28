@@ -1,4 +1,4 @@
-<%- include("../partials/header", { title: title }) %>
+<%- include("../partials/header", { title }) %>
 
 <h1>Inventory Management</h1>
 
@@ -6,7 +6,7 @@
   <div class="notice"><%= messages %></div>
 <% } %>
 
-<ul>
+<ul class="manage-links">
   <li><a href="/inv/add-classification">Add New Classification</a></li>
   <li><a href="/inv/add-inventory">Add New Inventory</a></li>
 </ul>

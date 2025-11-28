@@ -1,52 +1,54 @@
-<%- include("../partials/header", { title: title }) %>
+<%- include("../partials/header", { title }) %>
 
-<h1>Add New Inventory Item</h1>
+<h1>Add Inventory Item</h1>
 
 <% if (messages.length) { %>
-  <div class="notice"><%= messages %></div>
+  <p class="notice"><%= messages %></p>
 <% } %>
 
 <% if (errors) { %>
-  <ul class="errors">
-    <% errors.forEach(err => { %>
-      <li><%= err.msg %></li>
-    <% }) %>
-  </ul>
+<ul class="errors">
+  <% errors.forEach(e => { %>
+    <li><%= e.msg %></li>
+  <% }) %>
+</ul>
 <% } %>
 
-<form action="/inv/add-inventory" method="post">
+<form action="/inv/add-inventory" method="POST" id="inventoryForm">
 
-  <label>Make</label>
+  <label>Make:</label>
   <input name="inv_make" value="<%= inv_make || '' %>" required>
 
-  <label>Model</label>
+  <label>Model:</label>
   <input name="inv_model" value="<%= inv_model || '' %>" required>
 
-  <label>Year</label>
+  <label>Year:</label>
   <input type="number" name="inv_year" value="<%= inv_year || '' %>" required>
 
-  <label>Description</label>
+  <label>Description:</label>
   <textarea name="inv_description" required><%= inv_description || '' %></textarea>
 
-  <label>Image Path</label>
+  <label>Image Path:</label>
   <input name="inv_image" value="<%= inv_image || '/images/vehicles/no-image.png' %>">
 
-  <label>Thumbnail Path</label>
+  <label>Thumbnail Path:</label>
   <input name="inv_thumbnail" value="<%= inv_thumbnail || '/images/vehicles/no-image-tn.png' %>">
 
-  <label>Price</label>
+  <label>Price:</label>
   <input type="number" step="0.01" name="inv_price" value="<%= inv_price || '' %>" required>
 
-  <label>Miles</label>
+  <label>Miles:</label>
   <input type="number" name="inv_miles" value="<%= inv_miles || '' %>" required>
 
-  <label>Color</label>
+  <label>Color:</label>
   <input name="inv_color" value="<%= inv_color || '' %>" required>
 
-  <label>Classification</label>
+  <label>Classification:</label>
   <%= classificationList %>
 
   <button type="submit">Add Vehicle</button>
 </form>
+
+<script src="/js/inventoryValidation.js"></script>
 
 <%- include("../partials/footer") %>

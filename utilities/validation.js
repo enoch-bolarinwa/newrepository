@@ -2,56 +2,52 @@
 
 const { body, validationResult } = require("express-validator")
 const utilities = require(".")
+const buildClassificationList = require("./classificationList")
 
 module.exports = {
-
   classificationRules() {
     return [
       body("classification_name")
         .trim()
-        .isLength({ min: 1 })
-        .withMessage("Classification name is required.")
         .matches(/^[A-Za-z0-9]+$/)
-        .withMessage("No spaces or special characters allowed.")
+        .withMessage("Classification name must contain only letters and numbers (no spaces).")
     ]
   },
 
-  checkClassificationData(req, res, next) {
+  checkClassificationData: async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
-      const nav = utilities.getNav()
-      return res.render("inventory/add-classification", {
+      const nav = await utilities.getNav()
+      res.render("inventory/add-classification", {
         title: "Add Classification",
         nav,
         errors: errors.array(),
         messages: req.flash("notice")
       })
+      return
     }
     next()
   },
 
-  // Inventory Rules
   inventoryRules() {
     return [
-      body("inv_make").trim().notEmpty(),
-      body("inv_model").trim().notEmpty(),
-      body("inv_year").isInt(),
-      body("inv_price").isFloat(),
-      body("inv_miles").isInt(),
-      body("classification_id").isInt()
+      body("inv_make").trim().notEmpty().withMessage("Make is required."),
+      body("inv_model").trim().notEmpty().withMessage("Model is required."),
+      body("inv_year").isInt().withMessage("Year must be a number."),
+      body("inv_price").isFloat().withMessage("Price must be numeric."),
+      body("inv_miles").isInt().withMessage("Miles must be a number."),
+      body("classification_id").isInt().withMessage("Classification is required.")
     ]
   },
 
   checkInventoryData: async (req, res, next) => {
     const errors = validationResult(req)
-
     if (!errors.isEmpty()) {
       const nav = await utilities.getNav()
-      const classificationList =
-        await utilities.buildClassificationList(req.body.classification_id)
+      const classificationList = await utilities.buildClassificationList(req.body.classification_id)
 
       return res.render("inventory/add-inventory", {
-        title: "Add New Inventory Item",
+        title: "Add Inventory Item",
         nav,
         classificationList,
         errors: errors.array(),
