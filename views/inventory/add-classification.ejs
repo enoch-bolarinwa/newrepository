@@ -1,26 +1,21 @@
+<!-- views/inventory/add-classification.ejs -->
 <%- include("../partials/header", { title }) %>
 
-<h1>Add Classification</h1>
+<h1>Add New Classification</h1>
 
-<% if (messages.length) { %>
-  <p class="notice"><%= messages %></p>
-<% } %>
-
-<% if (errors) { %>
-  <ul class="errors">
-    <% errors.forEach(e => { %>
-      <li><%= e.msg %></li>
-    <% }) %>
-  </ul>
-<% } %>
-
-<form action="/inv/add-classification" method="POST" id="classificationForm">
+<form method="POST" action="/inventory/add-classification">
   <label for="classification_name">Classification Name:</label>
-  <input type="text" id="classification_name" name="classification_name"
-         required pattern="^[A-Za-z0-9]+$">
-  <button type="submit">Submit</button>
-</form>
+  <input type="text" name="classification_name" required>
 
-<script src="/js/classificationValidation.js"></script>
+  <% if (errors) { %>
+    <div class="errors">
+      <% errors.forEach(e => { %>
+        <p><%= e.msg %></p>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <button type="submit" class="btn btn-primary">Add Classification</button>
+</form>
 
 <%- include("../partials/footer") %>

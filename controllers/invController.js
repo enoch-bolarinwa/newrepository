@@ -3,6 +3,10 @@
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities")
 
+// ===============================
+// MANAGEMENT DASHBOARD
+// ===============================
+
 async function buildManagement(req, res) {
   const nav = await utilities.getNav()
   res.render("inventory/management", {
@@ -11,6 +15,10 @@ async function buildManagement(req, res) {
     messages: req.flash("notice")
   })
 }
+
+// ===============================
+// CLASSIFICATION
+// ===============================
 
 async function buildAddClassification(req, res) {
   const nav = await utilities.getNav()
@@ -29,11 +37,7 @@ async function addClassification(req, res) {
 
   if (result) {
     req.flash("notice", "Classification added successfully.")
-    return res.render("inventory/management", {
-      title: "Inventory Management",
-      nav,
-      messages: req.flash("notice")
-    })
+    return res.redirect("/inventory")
   }
 
   req.flash("notice", "Failed to add classification.")
@@ -45,12 +49,16 @@ async function addClassification(req, res) {
   })
 }
 
+// ===============================
+// ADD INVENTORY
+// ===============================
+
 async function buildAddInventory(req, res) {
   const nav = await utilities.getNav()
   const classificationList = await utilities.buildClassificationList()
 
   res.render("inventory/add-inventory", {
-    title: "Add New Inventory Item",
+    title: "Add Inventory Item",
     nav,
     classificationList,
     errors: null,
@@ -61,17 +69,14 @@ async function buildAddInventory(req, res) {
 
 async function addInventory(req, res) {
   const result = await invModel.addInventory(req.body)
-  const nav = await utilities.getNav()
-  const classificationList = await utilities.buildClassificationList(req.body.classification_id)
 
   if (result) {
     req.flash("notice", "Vehicle added successfully.")
-    return res.render("inventory/management", {
-      title: "Inventory Management",
-      nav,
-      messages: req.flash("notice")
-    })
+    return res.redirect("/inventory")
   }
+
+  const nav = await utilities.getNav()
+  const classificationList = await utilities.buildClassificationList(req.body.classification_id)
 
   req.flash("notice", "Error adding vehicle.")
   res.render("inventory/add-inventory", {
@@ -84,10 +89,89 @@ async function addInventory(req, res) {
   })
 }
 
+// ===============================
+// EDIT INVENTORY
+// ===============================
+
+async function buildEditInventory(req, res) {
+  const inv_id = req.params.inv_id
+  const item = await invModel.getInventoryById(inv_id)
+
+  if (!item) {
+    req.flash("notice", "Inventory item not found.")
+    return res.redirect("/inventory")
+  }
+
+  const nav = await utilities.getNav()
+  const classificationList = await utilities.buildClassificationList(item.classification_id)
+
+  res.render("inventory/edit-inventory", {
+    title: `Edit ${item.inv_make} ${item.inv_model}`,
+    nav,
+    classificationList,
+    item
+  })
+}
+
+async function updateInventory(req, res) {
+  const inv_id = req.body.inv_id
+  const result = await invModel.updateInventory(req.body, inv_id)
+
+  if (result) {
+    req.flash("notice", "Inventory updated successfully.")
+    return res.redirect("/inventory")
+  }
+
+  req.flash("notice", "Error updating inventory.")
+  res.redirect(`/inventory/edit/${inv_id}`)
+}
+
+// ===============================
+// DELETE INVENTORY
+// ===============================
+
+async function buildDeleteConfirmation(req, res) {
+  const item = await invModel.getInventoryById(req.params.inv_id)
+
+  if (!item) {
+    req.flash("notice", "Item not found.")
+    return res.redirect("/inventory")
+  }
+
+  const nav = await utilities.getNav()
+
+  res.render("inventory/delete-inventory", {
+    title: "Delete Vehicle",
+    nav,
+    item
+  })
+}
+
+async function deleteInventory(req, res) {
+  const { inv_id } = req.body
+  const result = await invModel.deleteInventory(inv_id)
+
+  if (result) {
+    req.flash("notice", "Vehicle deleted successfully.")
+    return res.redirect("/inventory")
+  }
+
+  req.flash("notice", "Error deleting vehicle.")
+  return res.redirect("/inventory")
+}
+
+// ===============================
+// EXPORT CONTROLLER
+// ===============================
+
 module.exports = {
   buildManagement,
   buildAddClassification,
   addClassification,
   buildAddInventory,
-  addInventory
+  addInventory,
+  buildEditInventory,
+  updateInventory,
+  buildDeleteConfirmation,
+  deleteInventory
 }

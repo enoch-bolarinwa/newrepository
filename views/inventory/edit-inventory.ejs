@@ -1,0 +1,50 @@
+<!-- views/inventory/edit-inventory.ejs -->
+<%- include("../partials/header", { title }) %>
+
+<h1>Edit <%= item.inv_make %> <%= item.inv_model %></h1>
+
+<form method="POST" action="/inventory/update">
+
+  <input type="hidden" name="inv_id" value="<%= item.inv_id %>">
+
+  <label>Make:</label>
+  <input type="text" name="inv_make" value="<%= item.inv_make %>" required>
+
+  <label>Model:</label>
+  <input type="text" name="inv_model" value="<%= item.inv_model %>" required>
+
+  <label>Year:</label>
+  <input type="number" name="inv_year" value="<%= item.inv_year %>" required>
+
+  <label>Description:</label>
+  <textarea name="inv_description"><%= item.inv_description %></textarea>
+
+  <label>Image:</label>
+  <input type="text" name="inv_image" value="<%= item.inv_image %>">
+
+  <label>Thumbnail:</label>
+  <input type="text" name="inv_thumbnail" value="<%= item.inv_thumbnail %>">
+
+  <label>Price:</label>
+  <input type="number" step="0.01" name="inv_price" value="<%= item.inv_price %>">
+
+  <label>Miles:</label>
+  <input type="number" name="inv_miles" value="<%= item.inv_miles %>">
+
+  <label>Color:</label>
+  <input type="text" name="inv_color" value="<%= item.inv_color %>">
+
+  <label>Classification:</label>
+  <select name="classification_id">
+    <% classificationList.forEach(c => { %>
+      <option value="<%= c.id %>" <%= c.selected ? "selected" : "" %>>
+        <%= c.name %>
+      </option>
+    <% }) %>
+  </select>
+
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+
+</form>
+
+<%- include("../partials/footer") %>

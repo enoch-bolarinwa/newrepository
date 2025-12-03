@@ -1,14 +1,17 @@
+<!-- views/inventory/management.ejs -->
 <%- include("../partials/header", { title }) %>
 
 <h1>Inventory Management</h1>
 
-<% if (messages.length) { %>
-  <div class="notice"><%= messages %></div>
+<a href="/inventory/add-classification" class="btn btn-primary">Add Classification</a>
+<a href="/inventory/add-inventory" class="btn btn-secondary">Add Inventory Item</a>
+
+<% if (messages.notice) { %>
+  <div class="alert alert-info"><%= messages.notice %></div>
 <% } %>
 
-<ul class="manage-links">
-  <li><a href="/inv/add-classification">Add New Classification</a></li>
-  <li><a href="/inv/add-inventory">Add New Inventory</a></li>
-</ul>
+<hr>
+
+<p>Select an option from above.</p>
 
 <%- include("../partials/footer") %>

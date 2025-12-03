@@ -1,42 +1,36 @@
+/***********************************************
+ * Account Validation
+ ***********************************************/
+const utilities = require("../utilities");           // FIXED PATH
+const { body, validationResult } = require("express-validator");
 
-  // Require utilities and express-validator
-const utilities = require(".")
-const { body, validationResult } = require("express-validator")
+const validate = {};
 
-// Create validate object
-const validate = {}
 
-/* **********************************
- *  Registration Data Validation Rules
- * ********************************* */
+/* ============================================
+   1. REGISTRATION VALIDATION RULES
+============================================ */
 validate.registrationRules = () => {
   return [
-    // firstname is required and must be string
     body("account_firstname")
       .trim()
       .escape()
       .notEmpty()
-      .isLength({ min: 1 })
       .withMessage("Please provide a first name."),
 
-    // lastname is required and must be string
     body("account_lastname")
       .trim()
       .escape()
       .notEmpty()
-      .isLength({ min: 2 })
       .withMessage("Please provide a last name."),
 
-    // valid email is required
     body("account_email")
       .trim()
-      .escape()
       .notEmpty()
       .isEmail()
       .normalizeEmail()
-      .withMessage("A valid email is required."),
+      .withMessage("A valid email address is required."),
 
-    // password is required and must be strong
     body("account_password")
       .trim()
       .notEmpty()
@@ -47,18 +41,21 @@ validate.registrationRules = () => {
         minNumbers: 1,
         minSymbols: 1
       })
-      .withMessage("Password does not meet requirements.")
-  ]
-}
+      .withMessage(
+        "Password must be at least 12 characters and include uppercase, lowercase, numbers, and symbols."
+      )
+  ];
+};
 
-/* **********************************
- *  Check for Validation Errors
- * ********************************* */
+
+/* ============================================
+   2. CHECK REGISTRATION ERRORS
+============================================ */
 validate.checkRegistrationData = async (req, res, next) => {
-  const errors = validationResult(req)
+  const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav()
+    let nav = await utilities.getNav();
 
     return res.render("account/register", {
       title: "Register",
@@ -67,34 +64,98 @@ validate.checkRegistrationData = async (req, res, next) => {
       account_firstname: req.body.account_firstname,
       account_lastname: req.body.account_lastname,
       account_email: req.body.account_email
-    })
+    });
   }
 
-  next()
-}
+  next();
+};
 
-/* ******************************
- * Check data and return errors or continue to registration
- * ***************************** */
-validate.checkRegData = async (req, res, next) => {
-  const { account_firstname, account_lastname, account_email } = req.body
-  let errors = []
-  errors = validationResult(req)
+
+/* ============================================
+   3. UPDATE ACCOUNT INFO RULES
+============================================ */
+validate.updateAccountRules = () => {
+  return [
+    body("firstname")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("First name is required."),
+
+    body("lastname")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Last name is required."),
+
+    body("email")
+      .trim()
+      .notEmpty()
+      .isEmail()
+      .normalizeEmail()
+      .withMessage("A valid email address is required.")
+  ];
+};
+
+
+/* ============================================
+   4. CHECK UPDATE ACCOUNT INFO ERRORS
+============================================ */
+validate.checkAccountUpdateData = async (req, res, next) => {
+  const errors = validationResult(req);
+
   if (!errors.isEmpty()) {
-    let nav = await utilities.getNav()
-    res.render("account/register", {
-      errors,
-      title: "Registration",
-      nav,
-      account_firstname,
-      account_lastname,
-      account_email,
-    })
-    return
+    return res.render("account/update-account", {
+      title: "Update Account",
+      errors: errors.array(),
+      data: req.body,
+      accountData: req.body      // sticky form values
+    });
   }
-  next()
-}
+
+  next();
+};
 
 
+/* ============================================
+   5. UPDATE PASSWORD RULES
+============================================ */
+validate.passwordRules = () => {
+  return [
+    body("password")
+      .trim()
+      .notEmpty()
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1
+      })
+      .withMessage(
+        "Password must be at least 12 characters and include uppercase, lowercase, numbers, and symbols."
+      )
+  ];
+};
 
-module.exports = validate
+
+/* ============================================
+   6. CHECK PASSWORD UPDATE ERRORS
+============================================ */
+validate.checkPasswordUpdate = async (req, res, next) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.render("account/update-account", {
+      title: "Update Account",
+      errors: errors.array(),
+      data: {},
+      accountData: { account_id: req.body.account_id }
+    });
+  }
+
+  next();
+};
+
+
+module.exports = validate;

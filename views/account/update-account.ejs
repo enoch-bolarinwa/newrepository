@@ -1,0 +1,93 @@
+<%- include("../partials/header") %>
+
+<div class="content">
+
+  <!-- ========================= -->
+  <!--   ERROR & MESSAGE PARTIALS -->
+  <!-- ========================= -->
+  <%- include("../partials/errors") %>
+  <%- include("../partials/messages") %>
+
+  <h1><%= title %></h1>
+
+
+  <!-- ========================= -->
+  <!--   FORM 1: UPDATE INFO      -->
+  <!-- ========================= -->
+  <section class="account-section">
+    <h2>Update Account Information</h2>
+
+    <form method="POST" action="/account/update-info" class="form-block">
+
+      <label for="firstname">First Name</label>
+      <input
+        id="firstname"
+        name="firstname"
+        type="text"
+        required
+        value="<%= data?.firstname || accountData?.firstname %>"
+      >
+
+      <label for="lastname">Last Name</label>
+      <input
+        id="lastname"
+        name="lastname"
+        type="text"
+        required
+        value="<%= data?.lastname || accountData?.lastname %>"
+      >
+
+      <label for="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        required
+        value="<%= data?.email || accountData?.email %>"
+      >
+
+      <input
+        type="hidden"
+        name="account_id"
+        value="<%= accountData.account_id %>"
+      >
+
+      <button type="submit">Update Account</button>
+    </form>
+  </section>
+
+
+  <!-- ========================= -->
+  <!--   FORM 2: CHANGE PASSWORD  -->
+  <!-- ========================= -->
+  <section class="account-section">
+    <h2>Change Password</h2>
+
+    <form method="POST" action="/account/update-password" class="form-block">
+
+      <label for="password">New Password</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        required
+      >
+
+      <p class="form-help">
+        Your password must be at least 12 characters long and include uppercase,
+        lowercase, numbers, and symbols.
+      </p>
+
+      <input
+        type="hidden"
+        name="account_id"
+        value="<%= accountData.account_id %>"
+      >
+
+      <button type="submit">Change Password</button>
+    </form>
+  </section>
+
+</div>
+
+<%- include("../partials/footer") %>
