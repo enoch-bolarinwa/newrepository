@@ -13,5 +13,6 @@
             "name": "render",
             "connectString": "postgresql://enoch341:iZQuFM3RYSKOYAJGm8ShRAl4vWArRcDN@dpg-d49163chg0os738ic7pg-a.oregon-postgres.render.com/enoch341"
         }
-    ]
+    ],
+    "liveServer.settings.port": 5501
 }
