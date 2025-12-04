@@ -6,6 +6,9 @@ const path = require("path")
 const session = require("express-session")
 const flash = require("connect-flash")
 const inventoryRoute = require("./routes/inventoryRoute")
+const favoritesRoute = require("./routes/favoritesRoute")
+
+
 
 require("dotenv").config()
 
@@ -37,6 +40,8 @@ app.use("/inv", inventoryRoute)
 app.get("/", (req, res) => {
   res.redirect("/inv")
 })
+
+app.use("/favorites", favoritesRoute)
 
 // 404
 app.use((req, res) => {

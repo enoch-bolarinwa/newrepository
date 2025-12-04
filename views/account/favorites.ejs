@@ -1,0 +1,26 @@
+<%- include("../partials/header", { title }) %>
+
+<h1>My Saved Vehicles</h1>
+
+<% if (messages.notice) { %>
+  <div class="alert"><%= messages.notice %></div>
+<% } %>
+
+<% if (favorites.length === 0) { %>
+  <p>You have no saved vehicles.</p>
+<% } else { %>
+  <ul class="favorites-list">
+    <% favorites.forEach(v => { %>
+      <li class="favorite-item">
+        <strong><%= v.inv_year %> <%= v.inv_make %> <%= v.inv_model %></strong><br>
+
+        <form method="POST" action="/favorites/remove">
+          <input type="hidden" name="inv_id" value="<%= v.inv_id %>">
+          <button type="submit">Remove</button>
+        </form>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<%- include("../partials/footer") %>
